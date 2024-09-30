@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 
 from src.enum_tracker import TrackerType
+from src.logger import get_logger
 from src.tracker_art import ArtTracker
 from src.visualization import draw_bbox
 from video_processing import VideoProcessor
@@ -70,6 +71,9 @@ def test_trackers(trackers, tracker_types):
     processor = VideoProcessor(frames_folder, START_FRAME)
     print(f"Video dimensions: {processor.frame_width}x{processor.frame_height}")
 
+    # At the beginning of the test_trackers function, create Logger instances:
+    loggers = {tracker_type: get_logger(OUTPUT_DIR, 'tracker', tracker_type.name) for tracker_type in tracker_types}
+
     frame_times = {tracker_type: [] for tracker_type in tracker_types}
     tracking_status = {tracker_type: [] for tracker_type in tracker_types}
 
@@ -119,8 +123,14 @@ def test_trackers(trackers, tracker_types):
 
     cv2.destroyAllWindows()
 
+    # for tracker_type in tracker_types:
+    #     log_performance_metrics(tracker_type, frame_times[tracker_type], tracking_status[tracker_type])
+
+
+    # Replace the log_performance_metrics calls at the end of the function with:
     for tracker_type in tracker_types:
-        log_performance_metrics(tracker_type, frame_times[tracker_type], tracking_status[tracker_type])
+        loggers[tracker_type].print_performance_metrics()
+
 
     print(f"\nProcessing complete. {NUM_FRAMES} frames processed.")
     print(f"Output images saved in: {OUTPUT_DIR}")
