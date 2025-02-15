@@ -1,8 +1,8 @@
-from src import save_debug_image, log_debug_info
-from src.detector_frame_diff import FrameDiffDetector
-from src.detector_mog2 import MOG2Detector
-from src.detector_optical_flow import OpticalFlowDetector
-from src.detector_enum import DetectorType
+from .utils import save_debug_image, log_debug_info
+from .detector_frame_diff import FrameDiffDetector
+from .detector_mog2 import MOG2Detector
+from .detector_optical_flow import OpticalFlowDetector
+from .detector_enum import DetectorType
 
 def create_detector(detector_type: DetectorType):
     if detector_type.name == 'MOG2':

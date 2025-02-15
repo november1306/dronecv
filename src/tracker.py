@@ -1,8 +1,8 @@
 import cv2
 
-from src.tracker_art import ArtTracker
-from src.enum_tracker import TrackerType
-from utils import preprocess_image
+from .tracker_art import ArtTracker
+from .enum_tracker import TrackerType
+from .utils import preprocess_image
 
 
 

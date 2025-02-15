@@ -1,9 +1,8 @@
 import cv2
 import numpy as np
-
-from src.base_tracker import BaseTracker
-from src.enum_tracker import TrackerType
-from utils import preprocess_image
+from .utils import preprocess_image
+from .base_tracker import BaseTracker
+from .enum_tracker import TrackerType
 
 
 class ArtTracker(BaseTracker):

@@ -1,15 +1,19 @@
 import os
 import time
-
 import cv2
 import numpy as np
+import sys
+from pathlib import Path
+
+# Add the parent directory to sys.path to allow running as module
+sys.path.append(str(Path(__file__).parent.parent))
 
 from src.enum_tracker import TrackerType
 from src.logger import get_logger
 from src.tracker_art import ArtTracker
 from src.visualization import draw_bbox
-from video_processing import VideoProcessor
-from video_to_frames import video_to_frames
+from src.video_processing import VideoProcessor
+from src.video_to_frames import video_to_frames
 
 # Available trackers
 AVAILABLE_TRACKERS = ['CSRT', 'KCF', 'MIL', 'ART']
@@ -17,7 +21,7 @@ AVAILABLE_TRACKERS = ['CSRT', 'KCF', 'MIL', 'ART']
 # Constants
 # VIDEO_PATH = r"../video/60m_return.avi"
 # INITIAL_BBOX = (270, 182, 10, 10)  # 20m_takeoff
-VIDEO_PATH = r"../video/20m_takeoff.avi"
+VIDEO_PATH = str(Path(__file__).parent.parent / "video" / "20m_takeoff.avi")
 INITIAL_BBOX = (441, 333, 15, 15)  # 20m_takeoff
 # VIDEO_PATH = r"../video/20m_short.avi"
 # INITIAL_BBOX = (315, 225, 15, 15) #20m_short
@@ -58,8 +62,6 @@ def log_frame(tracker_type, frame, bbox, status, frame_time, output_dir, frame_n
     return frame_time, status
 
 
-# This method has been moved to the logger module
-
 def test_trackers(trackers, tracker_types):
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     print(f"Saving output images to: {OUTPUT_DIR}")
@@ -71,7 +73,7 @@ def test_trackers(trackers, tracker_types):
     processor = VideoProcessor(frames_folder, START_FRAME)
     print(f"Video dimensions: {processor.frame_width}x{processor.frame_height}")
 
-    # At the beginning of the test_trackers function, create Logger instances:
+    # Create Logger instances
     loggers = {tracker_type: get_logger(OUTPUT_DIR, 'tracker', tracker_type.name) for tracker_type in tracker_types}
 
     frame_times = {tracker_type: [] for tracker_type in tracker_types}
@@ -102,7 +104,7 @@ def test_trackers(trackers, tracker_types):
 
                 status = "Tracked" if ok else "Lost"
                 frame_time, status = log_frame(tracker_type, tracker_frames[tracker_type], bbox, status, frame_time,
-                                               OUTPUT_DIR, frame_number)
+                                             OUTPUT_DIR, frame_number)
 
                 frame_times[tracker_type].append(frame_time)
                 tracking_status[tracker_type].append(status)
@@ -114,7 +116,7 @@ def test_trackers(trackers, tracker_types):
 
         for i, tracker_type in enumerate(tracker_types):
             cv2.putText(combined_frame, tracker_type.name, (10 + i * frame.shape[1], 30), cv2.FONT_HERSHEY_SIMPLEX, 1,
-                        (0, 255, 0), 2)
+                       (0, 255, 0), 2)
 
         cv2.imshow("Tracking", combined_frame)
 
@@ -123,14 +125,9 @@ def test_trackers(trackers, tracker_types):
 
     cv2.destroyAllWindows()
 
-    # for tracker_type in tracker_types:
-    #     log_performance_metrics(tracker_type, frame_times[tracker_type], tracking_status[tracker_type])
-
-
-    # Replace the log_performance_metrics calls at the end of the function with:
+    # Print performance metrics
     for tracker_type in tracker_types:
         loggers[tracker_type].print_performance_metrics()
-
 
     print(f"\nProcessing complete. {NUM_FRAMES} frames processed.")
     print(f"Output images saved in: {OUTPUT_DIR}")
@@ -139,4 +136,4 @@ def test_trackers(trackers, tracker_types):
 if __name__ == "__main__":
     tracker_types = [TrackerType.CSRT, TrackerType.ART]
     trackers = [create_tracker(tracker_type) for tracker_type in tracker_types]
-    test_trackers(trackers, tracker_types)
+    test_trackers(trackers, tracker_types) 

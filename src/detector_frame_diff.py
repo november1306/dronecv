@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 
-from base_detector import BaseDetector
-from utils import preprocess_image
+from .base_detector import BaseDetector
+from .utils import preprocess_image
 
 
 class FrameDiffDetector(BaseDetector):

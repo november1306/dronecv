@@ -1,15 +1,22 @@
 import os
 import time
 import cv2
-from detector import create_detector
-from detector_enum import DetectorType
-from scope import Scope
-from video_to_frames import video_to_frames
-from video_processing import VideoProcessor
-from visualization import visualize_results, draw_mog2_mask
-from utils import log_debug_info, save_debug_image
+import sys
+from pathlib import Path
 
-VIDEO_PATH = r"../video/20m_takeoff.avi"
+# Add the parent directory to sys.path to allow running as module
+sys.path.append(str(Path(__file__).parent.parent))
+
+from src.detector import create_detector
+from src.detector_enum import DetectorType
+from src.scope import Scope
+from src.video_to_frames import video_to_frames
+from src.video_processing import VideoProcessor
+from src.visualization import visualize_results, draw_mog2_mask
+from src.utils import log_debug_info, save_debug_image
+
+# Get the absolute path to the video file
+VIDEO_PATH = str(Path(__file__).parent.parent / "video" / "20m_takeoff.avi")
 SCOPE_CENTER = (450, 340) #20m takeoff
 # VIDEO_PATH = r"../video/20m_short.avi"
 # SCOPE_CENTER = (318, 230) #20m short
